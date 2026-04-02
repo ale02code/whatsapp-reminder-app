@@ -102,10 +102,10 @@ function ExcelUploader() {
                 </span>
               </p>
             </div>
-            <button className={`${buttonStyle} bg-green-400 relative`}>
+            <button className="bg-green-300 w-auto rounded-xl relative z-0 overflow-hidden py-1 px-2">
               Cargar Archivo
               <input
-                className="left-0 absolute opacity-0"
+                className="absolute z-10 left-0 opacity-0"
                 type="file"
                 accept=".xlsx, .xls"
                 onChange={handleUploadFile}
