@@ -1,81 +1,24 @@
-import { useState } from "react";
-import * as XLSX from "xlsx";
+import { useExcelReader } from "../hooks/useExcelReader";
 import folderIcon from "../imgs/folder.png";
 
 let buttonStyle = "p-2 font-semibold rounded-md cursor-pointer";
 
 function ExcelUploader() {
-  const [file, setFile] = useState(false);
+  const { file, data, readFile, clearFile } = useExcelReader();
 
   const handleUploadFile = (e) => {
     const fileUpload = e.target.files[0];
-
-    setFile(fileUpload);
-
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const workbook = XLSX.read(event.target.result, {
-        type: "binary",
-        sheetRows: 800,
-      });
-
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet, { range: 1 });
-
-      const headers = data.map((row) => ({
-        names: row["NOMBRES"],
-        lastNames: row["APELLIDOS"],
-        car: row["VEHICULO"],
-      }));
-      console.log(headers);
-    };
-
-    reader.readAsBinaryString(fileUpload);
+    readFile(fileUpload);
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-
     const file = e.dataTransfer.files[0];
-
-    if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-      alert("Solo se aceptan archivos .xlsx y .xls");
-      return;
-    }
-
-    setFile(file);
-
-    const reader = new FileReader();
-
-    reader.onload = (event) => {
-      const workbook = XLSX.read(event.target.result, {
-        type: "binary",
-        sheetRows: 800,
-      });
-
-      const sheetName = workbook.SheetNames[0];
-      const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet, { range: 1 });
-
-      const headers = data.map((row) => ({
-        names: row["NOMBRES"],
-        lastNames: row["APELLIDOS"],
-        car: row["VEHICULO"],
-      }));
-      console.log(headers);
-    };
-
-    reader.readAsBinaryString(file);
+    readFile(file);
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
-  };
-
-  const handleDeleteFile = () => {
-    setFile(false);
   };
 
   return (
@@ -117,7 +60,7 @@ function ExcelUploader() {
       <section className="flex justify-center items-center gap-2">
         <button
           onClick={() => {
-            handleDeleteFile();
+            clearFile();
           }}
           className={`${buttonStyle} bg-red-400 relative`}
         >
