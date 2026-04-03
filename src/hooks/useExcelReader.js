@@ -22,9 +22,9 @@ export function useExcelReader() {
 
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet, { range: 1, raw: false, });
+      const rows = XLSX.utils.sheet_to_json(sheet, { range: 1, raw: false, });
 
-      const headers = data
+      const headers = rows
         .filter(row => row["NOMBRES"] &&
           new Date(row["FECHA DE OTORGAMIENTO"]).getFullYear() == 2026
         )

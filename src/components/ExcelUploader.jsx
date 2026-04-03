@@ -1,10 +1,17 @@
+import { useCreditViewContext } from "../contexts/CreditViewContext";
+import { useDataContext } from "../contexts/DataContext";
 import { useExcelReader } from "../hooks/useExcelReader";
 import folderIcon from "../imgs/folder.png";
 
 let buttonStyle = "p-2 font-semibold rounded-md cursor-pointer";
 
 function ExcelUploader() {
+  // Custom Hooks
   const { file, data, readFile, clearFile } = useExcelReader();
+
+  // Context
+  const { setVisibility, visibility } = useCreditViewContext();
+  const { setData } = useDataContext();
 
   const handleUploadFile = (e) => {
     const fileUpload = e.target.files[0];
@@ -66,7 +73,13 @@ function ExcelUploader() {
         >
           Eliminar Archivo
         </button>
-        <button className={`${buttonStyle} bg-blue-400`}>
+        <button
+          onClick={() => {
+            setVisibility(!visibility);
+            setData(data);
+          }}
+          className={`${buttonStyle} bg-blue-400`}
+        >
           Confirmar Archivo
         </button>
       </section>

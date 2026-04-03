@@ -1,4 +1,6 @@
+import CreditView from "./components/CreditView";
 import ExcelUploader from "./components/ExcelUploader";
+import { CreditViewProvider } from "./contexts/CreditViewContext";
 
 function App() {
   return (
@@ -6,7 +8,10 @@ function App() {
       <h1 className="text-3xl capitalize font-bold mb-4">
         WhatsApp Reminder App
       </h1>
-      <ExcelUploader />
+      <CreditViewProvider>
+        <ExcelUploader />
+        <CreditView />
+      </CreditViewProvider>
     </main>
   );
 }

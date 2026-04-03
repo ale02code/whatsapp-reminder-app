@@ -27,8 +27,13 @@
  */
 
 import { createRoot } from "react-dom/client";
+import { DataProvider } from "./contexts/DataContext";
 import App from "./App";
-import './index.css'
+import "./index.css";
 
 const root = createRoot(document.getElementById("root"));
-root.render(<App />);
+root.render(
+  <DataProvider>
+    <App />
+  </DataProvider>,
+);
