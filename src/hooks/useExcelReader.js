@@ -17,18 +17,28 @@ export function useExcelReader() {
     reader.onload = (event) => {
       const workbook = XLSX.read(event.target.result, {
         type: "binary",
-        sheetRows: 800,
+        sheetRows: 1000,
       });
 
       const sheetName = workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
-      const data = XLSX.utils.sheet_to_json(sheet, { range: 1 });
+      const data = XLSX.utils.sheet_to_json(sheet, { range: 1, raw: false, });
 
-      const headers = data.map((row) => ({
-        names: row["NOMBRES"],
-        lastNames: row["APELLIDOS"],
-        car: row["VEHICULO"],
-      }));
+      const headers = data
+        .filter(row => row["NOMBRES"] &&
+          new Date(row["FECHA DE OTORGAMIENTO"]).getFullYear() == 2026
+        )
+        .map((row) => ({
+          name: row["NOMBRES"],
+          lastName: row["APELLIDOS"],
+          model: row["VEHICULO"],
+          license_plate: row["PLACA"],
+          phone: row["TELEFONO 1"],
+          payday: row["DIA"],
+          share: row["CUOTA"],
+          // status: row["STATUS"]
+        }));
+      setData(headers);
       console.log(headers);
     };
     reader.readAsBinaryString(file);
