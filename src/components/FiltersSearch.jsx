@@ -6,7 +6,7 @@ function FiltersSearch({
 }) {
   return (
     <footer className="bg-neutral-300 h-16 w-4/5 p-2 flex gap-5 justify-between items-center relative">
-      <div className="flex gap-5 justify-center items-center px-5">
+      <div className="flex gap-4 justify-center items-center px-5">
         Filters
         <input
           type="text"
@@ -24,7 +24,7 @@ function FiltersSearch({
         />
       </div>
       <button
-        className="p-2 bg-red-500 text-white rounded-lg"
+        className="p-2 bg-red-500 text-white rounded-lg cursor-pointer outline-none"
         onClick={() => {
           setFilterName("");
           setFilterPlate("");
