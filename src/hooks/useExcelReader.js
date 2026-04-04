@@ -25,8 +25,8 @@ export function useExcelReader() {
       const rows = XLSX.utils.sheet_to_json(sheet, { range: 1, raw: false, });
 
       const headers = rows
-        .filter(row => row["NOMBRES"] &&
-          new Date(row["FECHA DE OTORGAMIENTO"]).getFullYear() == 2026
+        .filter(row => row["NOMBRES"]
+          // && new Date(row["FECHA DE OTORGAMIENTO"]).getFullYear() == 2026
         )
         .map((row) => ({
           name: row["NOMBRES"],

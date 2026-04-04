@@ -13,6 +13,7 @@ function CreditView() {
   // UseStates
   const [filterName, setFilterName] = useState("");
   const [filterPlate, setFilterPlate] = useState("");
+  const [rows, setRows] = useState([]);
 
   const filteredData = data.filter(
     (row) =>
@@ -22,9 +23,18 @@ function CreditView() {
   );
 
   useEffect(() => {
-    console.log(data);
-    console.log(day);
+    setRows(filteredData.map((row) => ({ ...row, selected: true })));
   }, [data]);
+
+  const toggleRow = (index) => {
+    setRows((prev) =>
+      prev.map((row, i) =>
+        i === index ? { ...row, selected: !row.selected } : row,
+      ),
+    );
+  };
+
+  const selectedRows = rows.filter((row) => row.selected);
 
   return (
     <div
@@ -46,7 +56,10 @@ function CreditView() {
           <p>|</p>
           <li className="list-none cursor-pointer">Futuros (3 dias)</li>
         </nav>
-        <button className="absolute right-5 bg-sky-800 text-white p-2 rounded-lg">
+        <button
+          onClick={() => console.log(selectedRows)}
+          className="absolute right-5 bg-sky-800 text-white p-2 rounded-lg"
+        >
           Send Messages
         </button>
       </header>
@@ -54,6 +67,7 @@ function CreditView() {
         <table className="w-full text-sm text-left">
           <thead className="bg-sky-800 text-white sticky top-0">
             <tr className="border-b border-gray-200">
+              <th className="px-4 py-3 font-medium"></th>
               <th className="px-4 py-3 font-medium">Nombres</th>
               <th className="px-4 py-3 font-medium">Apellidos</th>
               <th className="px-4 py-3 font-medium">Vehículo</th>
@@ -64,11 +78,19 @@ function CreditView() {
             </tr>
           </thead>
           <tbody>
-            {filteredData.map((row, index) => (
+            {rows.map((row, index) => (
               <tr
                 key={index}
                 className="border-b border-gray-300 hover:bg-sky-100 transition-colors"
               >
+                <td className="px-4 py-3">
+                  <input
+                    className="w-5 h-5 outline-none"
+                    type="checkbox"
+                    checked={row.selected}
+                    onChange={() => toggleRow(index)}
+                  />
+                </td>
                 <td className="px-4 py-3">{row.name}</td>
                 <td className="px-4 py-3">{row.lastName}</td>
                 <td className="px-4 py-3">{row.model}</td>
