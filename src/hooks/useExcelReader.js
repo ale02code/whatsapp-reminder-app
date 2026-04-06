@@ -1,6 +1,21 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
 
+const allowedStatus = [
+  "REVISAR PROMESA DE PAGO Y APAGAR",
+  "REVISION DE CASO Y CONFIRMAR DATOS",
+  "EVALUAR SI PROCEDE DESCONEXION",
+  "GESTION ASEGURADORA",
+  "GESTION DE COBRO ADMINISTRATIVO",
+  "JURIDICO EU",
+  "OFRECER REFINANCIAMIENTO",
+  "PROCEDER CON LA RECUPERACION",
+  "APAGAR GPS",
+  "ASIGNADO A ABOGADO",
+  "CONCESIÓN CONFIRMADA",
+  undefined,
+];
+
 export function useExcelReader() {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
@@ -26,7 +41,7 @@ export function useExcelReader() {
 
       const headers = rows
         .filter(row => row["NOMBRES"]
-          // && new Date(row["FECHA DE OTORGAMIENTO"]).getFullYear() == 2026
+          && allowedStatus.includes(row["STATUS"]?.toUpperCase())
         )
         .map((row) => ({
           name: row["NOMBRES"],
@@ -36,7 +51,7 @@ export function useExcelReader() {
           phone: row["TELEFONO 1"],
           payday: row["DIA"],
           share: row["CUOTA"],
-          // status: row["STATUS"]
+          status: row["STATUS"]
         }));
       setData(headers);
       console.log(headers);

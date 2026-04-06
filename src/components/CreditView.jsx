@@ -72,6 +72,7 @@ function CreditView() {
               <th className="px-4 py-3 font-medium">Apellidos</th>
               <th className="px-4 py-3 font-medium">Vehículo</th>
               <th className="px-4 py-3 font-medium">Placa</th>
+              <th className="px-4 py-3 font-medium">Status</th>
               <th className="px-4 py-3 font-medium">Teléfono</th>
               <th className="px-4 py-3 font-medium">Día</th>
               <th className="px-4 py-3 font-medium">Cuota</th>
@@ -99,6 +100,7 @@ function CreditView() {
                     {row.license_plate}
                   </span>
                 </td>
+                <td className="px-4 py-3">{row.status}</td>
                 <td className="px-4 py-3">{row.phone}</td>
                 <td className="px-4 py-3 text-center">{row.payday}</td>
                 <td className="px-4 py-3 font-medium text-sky-800">
