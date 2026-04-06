@@ -1,16 +1,16 @@
 const date = new Date();
-console.log(date);
+// console.log(date);
 
 let localDate = date.toLocaleDateString();
-console.log(localDate);
+// console.log(localDate);
 
 let day = date.getDate();
-console.log(day);
+// console.log(day);
 
 let month = date.getMonth() + 1;
-console.log(month);
+// console.log(month);
 
 let year = date.getFullYear();
-console.log(year);
+// console.log(year);
 
 export { day, month, year, localDate }

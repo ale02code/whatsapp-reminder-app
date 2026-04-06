@@ -24,7 +24,7 @@ function CreditView() {
 
   useEffect(() => {
     setRows(filteredData.map((row) => ({ ...row, selected: true })));
-  }, [data]);
+  }, [data, filterName, filterPlate]);
 
   const toggleRow = (index) => {
     setRows((prev) =>
