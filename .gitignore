@@ -90,3 +90,9 @@ typings/
 
 # Electron-Forge
 out/
+
+.vite/
+
+#whatsApp
+.wwebjs_auth
+.wwebjs_cache

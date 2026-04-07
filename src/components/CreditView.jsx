@@ -19,7 +19,8 @@ function CreditView() {
     (row) =>
       row.name?.toLowerCase().includes(filterName.toLowerCase()) &&
       row.license_plate?.toLowerCase().includes(filterPlate.toLowerCase()) &&
-      Number(row.payday) === day,
+      // Number(row.payday) === day,
+      row.name?.toLowerCase().includes("cristian"),
   );
 
   useEffect(() => {
@@ -35,6 +36,17 @@ function CreditView() {
   };
 
   const selectedRows = rows.filter((row) => row.selected);
+
+  // Whatsapp
+  const handleSendMessages = async () => {
+    const messages = selectedRows.map((row) => ({
+      phone: row.phone,
+      text: `Hola ${row.name}, te recordamos que tu cuota de $${row.share} vence hoy.`,
+    }));
+
+    await window.whatsapp.sendMessages(messages);
+    alert("Mensajes enviados ✅");
+  };
 
   return (
     <div
@@ -57,7 +69,10 @@ function CreditView() {
           <li className="list-none cursor-pointer">Futuros (3 dias)</li>
         </nav>
         <button
-          onClick={() => console.log(selectedRows)}
+          onClick={() => {
+            console.log(selectedRows);
+            handleSendMessages();
+          }}
           className="absolute right-5 bg-sky-800 text-white p-2 rounded-lg"
         >
           Send Messages
