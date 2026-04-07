@@ -19,8 +19,7 @@ function CreditView() {
     (row) =>
       row.name?.toLowerCase().includes(filterName.toLowerCase()) &&
       row.license_plate?.toLowerCase().includes(filterPlate.toLowerCase()) &&
-      // Number(row.payday) === day,
-      row.name?.toLowerCase().includes("cristian"),
+      Number(row.payday) === day,
   );
 
   useEffect(() => {
@@ -41,7 +40,7 @@ function CreditView() {
   const handleSendMessages = async () => {
     const messages = selectedRows.map((row) => ({
       phone: row.phone,
-      text: `Hola ${row.name}, te recordamos que tu cuota de $${row.share} vence hoy.`,
+      text: `Hola ${row.name}, te recordamos que tu cuota de ${row.share} vence hoy.`,
     }));
 
     await window.whatsapp.sendMessages(messages);
@@ -83,6 +82,7 @@ function CreditView() {
           <thead className="bg-sky-800 text-white sticky top-0">
             <tr className="border-b border-gray-200">
               <th className="px-4 py-3 font-medium"></th>
+              <th className="px-4 py-3 font-medium">N°</th>
               <th className="px-4 py-3 font-medium">Nombres</th>
               <th className="px-4 py-3 font-medium">Apellidos</th>
               <th className="px-4 py-3 font-medium">Vehículo</th>
@@ -107,6 +107,7 @@ function CreditView() {
                     onChange={() => toggleRow(index)}
                   />
                 </td>
+                <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{row.name}</td>
                 <td className="px-4 py-3">{row.lastName}</td>
                 <td className="px-4 py-3">{row.model}</td>
