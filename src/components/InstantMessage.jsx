@@ -11,7 +11,8 @@ function InstantMessage() {
   return (
     <div className="w-full flex flex-col justify-center items-center gap-2">
       <p className="text-lg px-10">
-        Nota: Puedes ocupar estas variables para tu mensaje <span>name, </span>
+        Nota: Puedes ocupar estas variables para tu mensaje personalizado{" "}
+        <span>name, </span>
         <span>lastName, </span>
         <span>model, </span>
         <span>license_plate, </span>
@@ -19,7 +20,7 @@ function InstantMessage() {
         <span>payday, </span>
         <span>share, </span>
         <span>status. </span>
-        {/* Solamente tienes que poner ${variable} */}
+        Solamente necesitas que poner {"${variable}"}
       </p>
       <textarea
         className="w-1/2 bg-neutral-300"

@@ -1,13 +1,11 @@
 import { useState } from "react";
 import Whatsapp from "./Whatsapp";
-import FutureMessage from "./FutureMessage";
 import InstantMessage from "./InstantMessage";
 import SettingsIcon from "../imgs/settings.svg";
 
 const components = {
   1: <Whatsapp />,
   2: <InstantMessage />,
-  3: <FutureMessage />,
 };
 
 function Settings() {
@@ -43,13 +41,7 @@ function Settings() {
                   onClick={() => handleChangeWindowVisibility(2)}
                   className="cursor-pointer"
                 >
-                  Mensaje inmediato
-                </p>
-                <p
-                  onClick={() => handleChangeWindowVisibility(3)}
-                  className="cursor-pointer"
-                >
-                  Mensaje futuro
+                  Mensaje personalizado
                 </p>
               </nav>
             </header>

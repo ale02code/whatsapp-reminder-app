@@ -7,27 +7,36 @@ import FiltersSearch from "./FiltersSearch";
 import removeImg from "../imgs/remove.png";
 
 function CreditView() {
-  // Contexts
   const { visibility, setVisibility } = useCreditViewContext();
   const { data } = useDataContext();
-  const { instant, setInstant } = useMessagesContentContext();
+  const { instant } = useMessagesContentContext();
 
-  // UseStates
   const [filterName, setFilterName] = useState("");
   const [filterPlate, setFilterPlate] = useState("");
   const [rows, setRows] = useState([]);
 
-  const filteredData = data.filter(
-    (row) =>
+  const [viewMode, setViewMode] = useState("current");
+
+  const filteredData = data.filter((row) => {
+    const matchesSearch =
       row.name?.toLowerCase().includes(filterName.toLowerCase()) &&
-      row.license_plate?.toLowerCase().includes(filterPlate.toLowerCase()) &&
-      row.name?.toLowerCase().includes("cristian"),
-    // Number(row.payday) === day,
-  );
+      row.license_plate?.toLowerCase().includes(filterPlate.toLowerCase());
+
+    const rowDay = Number(row.payday);
+    let matchesDate = false;
+
+    if (viewMode === "current") {
+      matchesDate = rowDay === day;
+    } else if (viewMode === "future") {
+      matchesDate = rowDay === day + 3;
+    }
+
+    return matchesSearch && matchesDate;
+  });
 
   useEffect(() => {
     setRows(filteredData.map((row) => ({ ...row, selected: true })));
-  }, [data, filterName, filterPlate]);
+  }, [data, filterName, filterPlate, viewMode]);
 
   const toggleRow = (index) => {
     setRows((prev) =>
@@ -39,10 +48,15 @@ function CreditView() {
 
   const selectedRows = rows.filter((row) => row.selected);
 
-  // Whatsapp
+  //whatsapp
   const handleSendMessages = async () => {
+    const defaultMessage =
+      "Estimado ${name} , le saludamos de Credit Car, le recordamos que la cuota de su préstamo vence este día. Le invitamos a realizar su pago en cualquiera de nuestras cuentas autorizadas y a enviarnos el comprobante correspondiente para poder procesarlo oportunamente. ¡Gracias por su puntualidad!";
+
     const messages = selectedRows.map((row) => {
-      const textWithValues = instant.replace(/\${(\w+)}/g, (match, key) => {
+      const template =
+        instant && instant.trim() !== "" ? instant : defaultMessage;
+      const textWithValues = template.replace(/\${(\w+)}/g, (match, key) => {
         return row[key] !== undefined ? row[key] : match;
       });
 
@@ -52,8 +66,13 @@ function CreditView() {
       };
     });
 
-    await window.whatsapp.sendMessages(messages);
-    alert("Mensajes enviados");
+    try {
+      await window.whatsapp.sendMessages(messages);
+      alert("Mensajes enviados exitosamente");
+    } catch (error) {
+      console.error("Error al enviar:", error);
+      alert("Hubo un error");
+    }
   };
 
   return (
@@ -66,51 +85,60 @@ function CreditView() {
     >
       <header className="bg-neutral-300 h-16 w-4/5 p-2 flex justify-center items-center relative">
         <img
-          className="h-12 absolute left-5"
+          className="h-12 absolute left-5 cursor-pointer"
           onClick={() => setVisibility(!visibility)}
           src={removeImg}
           alt="x-icon"
         />
-        <nav className="flex justify-center items-center gap-2 text-lg">
-          <li className="list-none cursor-pointer">Actuales</li>
-          <p>|</p>
-          <li className="list-none cursor-pointer">Futuros (3 dias)</li>
+        <nav className="flex justify-center items-center gap-4 text-lg">
+          {/* 4. Botones con lógica de cambio de estado y estilo activo */}
+          <li
+            className={`list-none cursor-pointer transition-all ${viewMode === "current" ? "font-bold text-sky-800 border-b-2 border-sky-800" : "text-gray-600"}`}
+            onClick={() => setViewMode("current")}
+          >
+            Actuales
+          </li>
+          <p className="text-gray-400">|</p>
+          <li
+            className={`list-none cursor-pointer transition-all ${viewMode === "future" ? "font-bold text-sky-800 border-b-2 border-sky-800" : "text-gray-600"}`}
+            onClick={() => setViewMode("future")}
+          >
+            Futuros (3 días)
+          </li>
         </nav>
         <button
-          onClick={() => {
-            console.log(selectedRows);
-            handleSendMessages();
-          }}
-          className="absolute right-5 bg-sky-800 text-white p-2 rounded-lg"
+          onClick={handleSendMessages}
+          className="absolute right-5 bg-sky-800 text-white p-2 rounded-lg hover:bg-sky-900"
         >
-          Send Messages
+          Send Messages ({selectedRows.length})
         </button>
       </header>
+
       <section className="h-100 min-w-150 w-4/5 bg-white overflow-x-hidden overflow-y-auto">
         <table className="w-full text-sm text-left">
           <thead className="bg-sky-800 text-white sticky top-0">
-            <tr className="border-b border-gray-200">
-              <th className="px-4 py-3 font-medium"></th>
-              <th className="px-4 py-3 font-medium">N°</th>
-              <th className="px-4 py-3 font-medium">Nombres</th>
-              <th className="px-4 py-3 font-medium">Apellidos</th>
-              <th className="px-4 py-3 font-medium">Vehículo</th>
-              <th className="px-4 py-3 font-medium">Placa</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Teléfono</th>
-              <th className="px-4 py-3 font-medium">Día</th>
-              <th className="px-4 py-3 font-medium">Cuota</th>
+            <tr>
+              <th className="px-4 py-3"></th>
+              <th className="px-4 py-3">N°</th>
+              <th className="px-4 py-3">Nombres</th>
+              <th className="px-4 py-3">Apellidos</th>
+              <th className="px-4 py-3">Vehículo</th>
+              <th className="px-4 py-3">Placa</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Teléfono</th>
+              <th className="px-4 py-3 text-center">Día</th>
+              <th className="px-4 py-3">Cuota</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((row, index) => (
               <tr
                 key={index}
-                className="border-b border-gray-300 hover:bg-sky-100 transition-colors"
+                className="border-b border-gray-300 hover:bg-sky-50"
               >
                 <td className="px-4 py-3">
                   <input
-                    className="w-5 h-5 outline-none"
+                    className="w-5 h-5 cursor-pointer"
                     type="checkbox"
                     checked={row.selected}
                     onChange={() => toggleRow(index)}
@@ -121,7 +149,7 @@ function CreditView() {
                 <td className="px-4 py-3">{row.lastName}</td>
                 <td className="px-4 py-3">{row.model}</td>
                 <td className="px-4 py-3">
-                  <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-mono">
+                  <span className="bg-gray-100 px-2 py-1 rounded text-xs">
                     {row.license_plate}
                   </span>
                 </td>
@@ -136,6 +164,7 @@ function CreditView() {
           </tbody>
         </table>
       </section>
+
       <FiltersSearch
         filterName={filterName}
         setFilterName={setFilterName}
