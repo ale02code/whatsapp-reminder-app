@@ -1,5 +1,6 @@
 import { useCreditViewContext } from "../contexts/CreditViewContext";
 import { useDataContext } from "../contexts/DataContext";
+import { useMessagesContentContext } from "../contexts/MessagesContentContext";
 import { useEffect, useState } from "react";
 import { day } from "../utils/dateUtils";
 import FiltersSearch from "./FiltersSearch";
@@ -9,6 +10,7 @@ function CreditView() {
   // Contexts
   const { visibility, setVisibility } = useCreditViewContext();
   const { data } = useDataContext();
+  const { instant, setInstant } = useMessagesContentContext();
 
   // UseStates
   const [filterName, setFilterName] = useState("");
@@ -19,7 +21,8 @@ function CreditView() {
     (row) =>
       row.name?.toLowerCase().includes(filterName.toLowerCase()) &&
       row.license_plate?.toLowerCase().includes(filterPlate.toLowerCase()) &&
-      Number(row.payday) === day,
+      row.name?.toLowerCase().includes("cristian"),
+    // Number(row.payday) === day,
   );
 
   useEffect(() => {
@@ -38,13 +41,19 @@ function CreditView() {
 
   // Whatsapp
   const handleSendMessages = async () => {
-    const messages = selectedRows.map((row) => ({
-      phone: row.phone,
-      text: `Hola ${row.name}, te recordamos que tu cuota de ${row.share} vence hoy.`,
-    }));
+    const messages = selectedRows.map((row) => {
+      const textWithValues = instant.replace(/\${(\w+)}/g, (match, key) => {
+        return row[key] !== undefined ? row[key] : match;
+      });
+
+      return {
+        phone: row.phone,
+        text: textWithValues,
+      };
+    });
 
     await window.whatsapp.sendMessages(messages);
-    alert("Mensajes enviados ✅");
+    alert("Mensajes enviados");
   };
 
   return (
